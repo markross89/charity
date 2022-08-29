@@ -1449,7 +1449,7 @@ header nav ul li:last-of-type {
 /* line 61, scss/modules/homepage-sections/_help.scss */
 .help--slides-items .col:after {
   content: "";
-  width: 70%;
+  width: 350px;
   height: 1px;
   display: block;
   position: relative;
