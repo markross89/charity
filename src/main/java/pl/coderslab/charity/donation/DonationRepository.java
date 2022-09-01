@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 
 @Repository
@@ -12,6 +13,6 @@ import javax.transaction.Transactional;
 public interface DonationRepository extends JpaRepository<Donation, Long> {
 	
 	@Query(value = "SELECT SUM(quantity) FROM donation", nativeQuery = true)
-	int findQuantitySum ();
+	Optional<Integer> findQuantitySum ();
 
 }
