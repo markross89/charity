@@ -3,28 +3,39 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="../header.jsp"/>
   <body>
-    <header class="header--form-page">
+    <header class="header--form-page" style="margin-top: 30px">
       <nav class="container container--70">
         <ul class="nav--actions">
-          <li class="logged-user">
-            Witaj Agata
-            <ul class="dropdown">
-              <li><a href="#">Profil</a></li>
-              <li><a href="#">Moje zbiórki</a></li>
-              <li><a href="#">Wyloguj</a></li>
-            </ul>
-          </li>
+          <sec:authorize access="isAnonymous()">
+            <li><a href="<c:url value="/login" />" class="btn btn--small btn--without-border">Zaloguj</a></li>
+            <li><a href="<c:url value="/register" />" class="btn btn--small btn--highlighted">Załóż konto</a></li>
+          </sec:authorize>
+          <sec:authorize access="isAuthenticated()">
+            <li class="logged-user" style="margin-top: 6px">
+              <sec:authentication property="principal.username"/>
+              <ul class="dropdown">
+                <li><a href="<c:url value="/profile"/>">Profil</a></li>
+                <li><a href="<c:url value="/userDonations"/>">Moje zbiórki</a></li>
+                <li> <form action="<c:url value="/logout"/>" method="post">
+                  <input class="logout" type="submit" value="Wyloguj">
+                  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                </form>
+                </li>
+
+              </ul>
+            </li>
+          </sec:authorize>
         </ul>
 
         <ul>
-          <li><a href="<c:url value="/" />" class="btn btn--without-border ">Dom</a></li>
           <li><a href="<c:url value="/donation" />" class="btn btn--without-border ">Start</a></li>
-          <li><a href="index.html#steps" class="btn btn--without-border">O co chodzi?</a></li>
-          <li><a href="index.html#about-us" class="btn btn--without-border">O nas</a></li>
-          <li><a href="index.html#help" class="btn btn--without-border">Fundacje i organizacje</a></li>
-          <li><a href="index.html#contact" class="btn btn--without-border">Kontakt</a></li>
+          <li><a href="../#description" class="btn btn--without-border">O co chodzi?</a></li>
+          <li><a href="../#about" class="btn btn--without-border">O nas</a></li>
+          <li><a href="../#institutions" class="btn btn--without-border">Fundacje i organizacje</a></li>
+          <li><a href="../#contact" class="btn btn--without-border">Kontakt</a></li>
         </ul>
       </nav>
 
@@ -79,14 +90,15 @@
       <div class="form--steps-container">
         <div class="form--steps-counter">Krok <span>1</span>/4</div>
 
-        <form:form  modelAttribute="donation" method="post">
+        <form:form  modelAttribute="donation" class="form" method="post">
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
             <c:forEach items="${categories}" var="i">
             <div class="form-group form-group--checkbox">
               <label class="container">
-                <form:checkbox path="category" value="${i}"/>
+                <form:checkbox path="category" value="${i}"  title="${i.name}"/>
+
                 <span class="checkbox" ></span>
                 <span class="description">${i.name}</span>
               </label>
@@ -107,7 +119,7 @@
             <div class="form-group form-group--inline">
               <label>
                 Liczba 60l worków:
-                <form:input path="quantity" value="1"/><br>
+                <form:input path="quantity" id="quantity" value="1"/><br>
               </label>
               <form:errors path="quantity" element="div" class="error" style="margin-left: 175px; margin-top: 10px"/>
             </div>
@@ -125,8 +137,8 @@
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
             <c:forEach items="${institutions}" var="i">
             <div class="form-group form-group--checkbox">
-              <label>
-                <form:radiobutton path="institution" value="${i}"/>
+              <label class="radiobutton">
+                <form:radiobutton path="institution" value="${i}" title="${i.name}"/>
 
                 <span class="checkbox radio"></span>
                 <span class="description">
@@ -155,18 +167,18 @@
               <div class="form-section--column">
                 <h4>Adres odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Ulica <form:input path="street" /></label>
+                  <label> Ulica <form:input path="street" id="street"/></label>
                   <form:errors path="street" element="div" class="error" style="margin-top: 10px"/>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label> Miasto <form:input path="city"/> </label><br>
+                  <label> Miasto <form:input path="city" id="city"/> </label><br>
                   <form:errors path="city" element="div" class="error"/>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
-                    Kod pocztowy<form:input path="postCode" /></><br>
+                    Kod pocztowy<form:input path="postCode" id="postCode"/></><br>
                   </label><br>
                   <form:errors path="postCode" element="div" class="error"/>
 
@@ -176,19 +188,19 @@
               <div class="form-section--column">
                 <h4>Termin odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Data <form:input type="date" path="pickUpDate"/> </label>
+                  <label> Data <form:input type="date" path="pickUpDate"  id="pickUpDate"/> </label>
                   <form:errors path="pickUpDate" element="div" class="errorTime" />
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label> Godzina <form:input type="time"  path="pickUpTime" /> </label>
+                  <label> Godzina <form:input type="time"  path="pickUpTime" id="time" /> </label>
                   <form:errors path="pickUpTime" element="div" class="errorTime" />
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
                     Uwagi dla kuriera
-                    <form:textarea path="pickUpComment"/>
+                    <form:textarea path="pickUpComment" id="comment"/>
                   </label>
                   <form:errors path="pickUpComment" element="div" class="errorTime" />
                 </div>
@@ -196,7 +208,7 @@
             </div>
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="button" class="btn next-step">Dalej</button>
+              <button type="button" class="btn next-step" id="summary">Dalej</button>
             </div>
           </div>
 
@@ -209,16 +221,16 @@
                 <h4>Oddajesz:</h4>
                 <ul>
                   <li>
-                    <span class="icon icon-bag"></span>
-                    <span class="summary--text"
-                      >4 worki ubrań w dobrym stanie dla dzieci</span
+                    <span class="icon icon-bag "></span>
+                    <span class="summary--text donation"
+                      ></span
                     >
                   </li>
 
                   <li>
                     <span class="icon icon-hand"></span>
-                    <span class="summary--text"
-                      >Dla fundacji "Mam marzenie" w Warszawie</span
+                    <span class="summary--text charity"
+                      ></span
                     >
                   </li>
                 </ul>
@@ -228,19 +240,18 @@
                 <div class="form-section--column">
                   <h4>Adres odbioru:</h4>
                   <ul>
-                    <li>Prosta 51</li>
-                    <li>Warszawa</li>
-                    <li>99-098</li>
-                    <li>123 456 789</li>
+                    <li id="streetSummary"></li>
+                    <li id="citySummary"></li>
+                    <li id="postCodeSummary"></li>
                   </ul>
                 </div>
 
                 <div class="form-section--column">
                   <h4>Termin odbioru:</h4>
                   <ul>
-                    <li>13/12/2018</li>
-                    <li>15:40</li>
-                    <li>Brak uwag</li>
+                    <li id="dateSummary"></li>
+                    <li id="timeSummary"></li>
+                    <li id="commentSummary"></li>
                   </ul>
                 </div>
               </div>

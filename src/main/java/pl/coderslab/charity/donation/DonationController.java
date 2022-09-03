@@ -53,9 +53,7 @@ public class DonationController {
 			return "donation/form";
 		}
 		if(customUser!=null) {
-			List<User> list = new ArrayList<>();
-			list.add(customUser.getUser());
-			donation.setUsers(list);
+			donation.setUser(customUser.getUser());
 		}
 		donationRepository.save(donation);
 		return "donation/form-confirmation";

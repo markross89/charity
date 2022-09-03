@@ -17,7 +17,7 @@
     <div class="bottom-line">
         <span class="bottom-line--copy">Copyright &copy; 2018</span>
         <div class="bottom-line--icons">
-            <a href="#" class="btn btn--small"><img src="resources/images/icon-facebook.svg"/></a> <a href="#"
+            <a href="<c:url value="https://pl-pl.facebook.com/"/>" class="btn btn--small"><img src="resources/images/icon-facebook.svg"/></a> <a href="<c:url value="https://www.instagram.com/"/>"
                                                                                                       class="btn btn--small"><img
                 src="resources/images/icon-instagram.svg"/></a>
         </div>

@@ -36,5 +36,16 @@ public class HomeController {
         return "index";
     }
     
+    @RequestMapping("/institutions")
+    public String displayInstitutions(Model model){
+        
+        List<List<Institution>> couples = Lists.partition(institutionRepository.findAll(), 2);
+        model.addAttribute("donations", donationRepository.findAll().size());
+        model.addAttribute("quantity",donationRepository.findQuantitySum().orElse(0));
+        model.addAttribute("list", couples);
+        
+        return "institutions";
+    }
+    
 
 }

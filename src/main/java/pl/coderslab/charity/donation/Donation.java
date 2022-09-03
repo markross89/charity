@@ -52,8 +52,8 @@ public class Donation {
 	@NotNull
 	@ManyToOne
 	private Institution institution;
-	@ManyToMany
-	private List<User> users;
+	@ManyToOne
+	private User user;
 	
 	
 }

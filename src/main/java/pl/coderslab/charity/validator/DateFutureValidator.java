@@ -13,7 +13,7 @@ public class DateFutureValidator implements ConstraintValidator<DateFuture, Loca
 	@Override
 	public boolean isValid (LocalDate value, ConstraintValidatorContext context) {
 
-		if (value.isAfter(LocalDate.now()) ){
+		if (value!=null && value.isAfter(LocalDate.now()) ){
 			return true;
 		}
 		return false;
