@@ -7,9 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.role.RoleRepository;
 
+
+import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
+
 
 
 @Controller
@@ -37,10 +38,7 @@ public class UserController {
 	@PostMapping("/register")  // adds a user
 	public String processForm (@Valid User user, BindingResult result, Model model) {
 		
-		if (result.hasErrors()) {
-			return "login/register";
-		}
-		else {
+		if (!result.hasErrors()) {
 			for (User u : userRepository.findAll()) {
 				if (u.getUsername().equals(user.getUsername())) {
 					return "/login/messageRegister";
@@ -51,8 +49,8 @@ public class UserController {
 				model.addAttribute("user", user);
 				return "login/messageRegistrationOk";
 			}
-			return "login/register";
 		}
+		return "login/register";
 	}
 
 
@@ -62,33 +60,53 @@ public class UserController {
 //		model.addAttribute("user", customUser.getUser());
 //		return "/login/userDetails";
 //	}
-//
-//	@GetMapping("/editUser")  // display edit user form
-//	public String editUser (Model model, @AuthenticationPrincipal CurrentUser customUser) {
+////
+//	@GetMapping("/profile")
+//	public String userDetails (Model model, @AuthenticationPrincipal CurrentUser customUser) {
 //
 //		model.addAttribute("user", customUser.getUser());
-//		return "/login/editUser";
+//		return "/login/userDataUpdate";
 //	}
 //
-//	@PostMapping("/editUser")  // update user
+//	@PostMapping("/profile")
 //	public String saveUser (@Valid User user, BindingResult result) {
 //
 //		if (result.hasErrors()) {
-//			return "user/editUser";
+//			return "/login/userDataUpdate";
 //		}
 //		else {
 //			for (User u : userRepository.findAll()) {
 //				if (u.getUsername().equals(user.getUsername())) {
-//					return "/login/messageRegister";
+//					return "/login/userDataUpdate";
 //				}else {
 //					userService.saveUser(user);
-//					return "/login/messageUpdate";
+//					return "redirect:/userDetails";
 //				}
 //			}
-//			return "redirect:/login";
+//			return "redirect:/userDetails";
 //		}
 //	}
 //
+	
+	@GetMapping("/profile")
+	public String showProfile (Model model,  @AuthenticationPrincipal CurrentUser customUser) {
+		
+		model.addAttribute("user", customUser.getUser());
+		return "/login/userDataUpdate";
+	}
+	
+	@PostMapping("/profile")
+	public String updateUser (@Valid User user, BindingResult result) {
+		
+		if (!result.hasErrors()) {
+			if (user.getPassword().equals(user.getPasswordRepeat())) {
+				userService.saveUser(user);
+				
+				return "redirect:/profile";
+			}
+		}
+		return "/login/userDataUpdate";
+	}
 //	@GetMapping("/userList") // display users list
 //	public String userList (Model model) {
 //

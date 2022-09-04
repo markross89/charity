@@ -21,7 +21,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests()
 				.antMatchers("/**").permitAll()
-				.and().formLogin().loginPage("/login").defaultSuccessUrl("/")
+				.and().formLogin(formLogin -> formLogin.successHandler(new CustomAuthenticationSuccessHandler()))
+				.formLogin().loginPage("/login")
 				.and().logout().logoutSuccessUrl("/")
 				.permitAll()
 				.and().exceptionHandling().accessDeniedPage("/403");

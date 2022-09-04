@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="../header.jsp"/>
   <body>
-    <header class="header--form-page">
+    <header class="header--form-page" style="margin-top: 30px">
       <nav class="container container--70">
         <ul class="nav--actions">
           <sec:authorize access="isAnonymous()">

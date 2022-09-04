@@ -33,7 +33,6 @@ public class User {
 	@NotBlank
 	private String password;
 	@Transient
-	@NotBlank
 	private String passwordRepeat;
 	private int enabled;
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

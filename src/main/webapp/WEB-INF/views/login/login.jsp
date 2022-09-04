@@ -4,8 +4,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="../header.jsp"/>
   <body>
-    <header>
-      <nav class="container container--70">
+    <header style="margin-top: 30px">
+      <nav class="container container--70" >
         <ul class="nav--actions">
           <sec:authorize access="isAnonymous()">
             <li><a href="<c:url value="/login" />" class="btn btn--small btn--without-border">Zaloguj</a></li>
@@ -38,7 +38,7 @@
       </nav>
     </header>
 
-    <section class="login-page">
+    <section class="login-page" >
       <h2>Zaloguj się</h2>
       <form method="post">
         <div class="form-group" style="margin-left: 180px">

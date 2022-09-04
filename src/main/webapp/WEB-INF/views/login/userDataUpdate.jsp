@@ -4,7 +4,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <jsp:include page="../header.jsp"/>
   <body>
-    <header style="margin-top: 30px">
+    <header>
       <nav class="container container--70">
         <ul class="nav--actions">
           <sec:authorize access="isAnonymous()">
@@ -39,9 +39,11 @@
     </header>
 
     <section class="login-page">
-      <h2>Załóż konto</h2>
+      <h2>${user.firstName} ${user.lastName}</h2>
+      <p style="font-size: medium">Wprowadzone zmiany będą widoczne po ponownym zalogowaniu</p>
 
-        <form:form   modelAttribute="user" method="post">
+        <form:form  class="user" modelAttribute="user" method="post" >
+          <form:hidden path="id" value="${user.id}" />
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
           <form:input path="firstName" style="margin-left: 170px" class="form-control form-control-user" placeholder="Imię"/>
         </div> <form:errors path="firstName" Class="markus-error"  element="div"/>
@@ -58,9 +60,9 @@
           <form:password path="passwordRepeat" style="margin-left: 170px" class="form-control form-control-user" placeholder="Powtórz hasło"/>
         </div><form:errors path="passwordRepeat" Class="markus-error" />
 
-        <div class="form-group form-group--buttons" style="margin-left: 195px">
+        <div class="form-group form-group--buttons" style="margin-left: 178px">
 
-          <button class="btn" type="submit">Załóż konto</button>
+          <button class="btn" type="submit">Zatwierdź zmiany</button>
         </div>
           </form:form>
     </section>

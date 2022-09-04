@@ -1,7 +1,6 @@
 package pl.coderslab.charity;
 
 import com.google.common.collect.Lists;
-import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
