@@ -4,6 +4,7 @@ package pl.coderslab.charity.email;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import pl.coderslab.charity.token.TokenService;
 
 
 @Service
@@ -11,10 +12,12 @@ public class EmailServiceImpl implements EmailService {
 	
 	
 	private final JavaMailSender emailSender;
+	private final TokenService tokenService;
 	
-	public EmailServiceImpl (JavaMailSender emailSender) {
+	public EmailServiceImpl (JavaMailSender emailSender, TokenService tokenService) {
 		
 		this.emailSender = emailSender;
+		this.tokenService = tokenService;
 	}
 	
 	@Override

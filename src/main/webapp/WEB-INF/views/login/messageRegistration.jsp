@@ -42,8 +42,7 @@
 
       <div class="slogan container container--90">
           <h2>
-            Witaj ${user.firstName} <br>
-            Rejestracja zakończyła się sukcesem
+           ${message}
           </h2>
       </div>
     </header>
