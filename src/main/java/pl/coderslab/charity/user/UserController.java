@@ -5,12 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.charity.role.RoleRepository;
+import pl.coderslab.charity.institution.InstitutionRepository;
 
-
-import javax.transaction.Transactional;
 import javax.validation.Valid;
-
 
 
 @Controller
@@ -18,24 +15,24 @@ import javax.validation.Valid;
 public class UserController {
 	
 	private final UserService userService;
-	private final RoleRepository roleRepository;
+	private final InstitutionRepository institutionRepository;
 	private final UserRepository userRepository;
 	
-	public UserController (UserService userService, RoleRepository roleRepository, UserRepository userRepository) {
+	public UserController (UserService userService, InstitutionRepository institutionRepository, UserRepository userRepository) {
 		
 		this.userService = userService;
-		this.roleRepository = roleRepository;
+		this.institutionRepository = institutionRepository;
 		this.userRepository = userRepository;
 	}
 	
-	@GetMapping("/register")  // display register form
+	@GetMapping("/register")
 	public String showForm (Model model) {
 		
 		model.addAttribute("user", new User());
 		return "/login/register";
 	}
 	
-	@PostMapping("/register")  // adds a user
+	@PostMapping("/register")
 	public String processForm (@Valid User user, BindingResult result, Model model) {
 		
 		if (!result.hasErrors()) {
@@ -52,44 +49,9 @@ public class UserController {
 		}
 		return "login/register";
 	}
-
-
-//	@GetMapping("/details")  // display details of  user
-//	public String showUserDetails (Model model, @AuthenticationPrincipal CurrentUser customUser) {
-//
-//		model.addAttribute("user", customUser.getUser());
-//		return "/login/userDetails";
-//	}
-////
-//	@GetMapping("/profile")
-//	public String userDetails (Model model, @AuthenticationPrincipal CurrentUser customUser) {
-//
-//		model.addAttribute("user", customUser.getUser());
-//		return "/login/userDataUpdate";
-//	}
-//
-//	@PostMapping("/profile")
-//	public String saveUser (@Valid User user, BindingResult result) {
-//
-//		if (result.hasErrors()) {
-//			return "/login/userDataUpdate";
-//		}
-//		else {
-//			for (User u : userRepository.findAll()) {
-//				if (u.getUsername().equals(user.getUsername())) {
-//					return "/login/userDataUpdate";
-//				}else {
-//					userService.saveUser(user);
-//					return "redirect:/userDetails";
-//				}
-//			}
-//			return "redirect:/userDetails";
-//		}
-//	}
-//
 	
 	@GetMapping("/profile")
-	public String showProfile (Model model,  @AuthenticationPrincipal CurrentUser customUser) {
+	public String showProfile (Model model, @AuthenticationPrincipal CurrentUser customUser) {
 		
 		model.addAttribute("user", customUser.getUser());
 		return "/login/userDataUpdate";
@@ -107,12 +69,24 @@ public class UserController {
 		}
 		return "/login/userDataUpdate";
 	}
-//	@GetMapping("/userList") // display users list
-//	public String userList (Model model) {
-//
-//		model.addAttribute("users", userRepository.findAll());
-//		return "/login/usersList";
-//	}
+	
+	@GetMapping("/admin")
+	public String userList (Model model, @AuthenticationPrincipal CurrentUser customUser) {
+		
+		model.addAttribute("user", customUser.getUser());
+		model.addAttribute("users", userRepository.findAll());
+		return "/user/admin";
+	}
+	
+	@GetMapping("/institutions")
+	public String institutionList (Model model, @AuthenticationPrincipal CurrentUser customUser) {
+		
+		model.addAttribute("user", customUser.getUser());
+		model.addAttribute("institutions", institutionRepository.findAll());
+		return "/user/institutions";
+	}
+
+
 //
 //	@GetMapping("/changeRole/{id}")  // display user role form
 //	public String roleForm (Model model, @PathVariable long id) {

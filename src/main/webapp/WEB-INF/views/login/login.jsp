@@ -11,6 +11,10 @@
             <li><a href="<c:url value="/login" />" class="btn btn--small btn--without-border">Zaloguj</a></li>
             <li><a href="<c:url value="/register" />" class="btn btn--small btn--highlighted">Załóż konto</a></li>
           </sec:authorize>
+          <sec:authorize access="hasRole('ADMIN')">
+            <li><a href="<c:url value="/institutions"/>">Fundacje</a></li>
+            <li><a href="<c:url value="/admin"/>">Użytkownicy</a></li>
+          </sec:authorize>
           <sec:authorize access="isAuthenticated()">
             <li class="logged-user" style="margin-top: 6px">
               <sec:authentication property="principal.username"/>

@@ -35,11 +35,12 @@ public class UserServiceImpl implements UserService {
 	public void saveUser (User user) {
 		
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setEnabled(1);
+		user.setEnabled(0);
 		Role userRole = roleRepository.findByName("ROLE_USER");
 		user.setRoles(new HashSet<>(Arrays.asList(userRole)));
 		userRepository.save(user);
 	}
+
 }
 
 

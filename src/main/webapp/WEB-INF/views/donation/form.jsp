@@ -17,6 +17,10 @@
             <li class="logged-user" style="margin-top: 6px">
               <sec:authentication property="principal.username"/>
               <ul class="dropdown">
+                <sec:authorize access="hasRole('ADMIN')">
+                  <li><a href="<c:url value="/institutions"/>">Fundacje</a></li>
+                  <li><a href="<c:url value="/admin"/>">Użytkownicy</a></li>
+                </sec:authorize>
                 <li><a href="<c:url value="/profile"/>">Profil</a></li>
                 <li><a href="<c:url value="/userDonations"/>">Moje zbiórki</a></li>
                 <li> <form action="<c:url value="/logout"/>" method="post">
