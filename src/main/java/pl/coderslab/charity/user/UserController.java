@@ -1,16 +1,20 @@
 package pl.coderslab.charity.user;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.charity.institution.InstitutionRepository;
+import pl.coderslab.charity.email.EmailService;
+import pl.coderslab.charity.email.EmailServiceImpl;
+import pl.coderslab.charity.role.RoleRepository;
 import pl.coderslab.charity.token.Token;
 import pl.coderslab.charity.token.TokenService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @Controller
@@ -18,72 +22,25 @@ import java.time.LocalDateTime;
 public class UserController {
 	
 	private final UserService userService;
-	private final InstitutionRepository institutionRepository;
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
+	private final RoleRepository roleRepository;
+	private final EmailServiceImpl emailService;
+	private final BCryptPasswordEncoder passwordEncoder;
 	
-	public UserController (UserService userService, InstitutionRepository institutionRepository, UserRepository userRepository,
-						   TokenService tokenService) {
+	public UserController (UserService userService, UserRepository userRepository,
+						   TokenService tokenService, RoleRepository roleRepository, EmailServiceImpl emailService,
+						   BCryptPasswordEncoder passwordEncoder) {
 		
 		this.userService = userService;
-		this.institutionRepository = institutionRepository;
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
+		this.roleRepository = roleRepository;
+		this.emailService = emailService;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
-	@GetMapping("/register")
-	public String showForm (Model model) {
-		
-		model.addAttribute("user", new User());
-		return "/login/register";
-	}
 	
-	@PostMapping("/register")
-	public String processForm (@Valid User user, BindingResult result, Model model) {
-		
-		if (!result.hasErrors()) {
-			for (User u : userRepository.findAll()) {
-				if (u.getUsername().equals(user.getUsername())) {
-					model.addAttribute("message", "Przykro nam<br> Wygląda na to że podany email istnieje już w naszej bazie danych.<br> Spróbuj " +
-							"się " +
-							"zalogować, lub użyć innego adresu email.");
-					return "/login/messageRegistration";
-				}
-			}
-			if (user.getPassword().equals(user.getPasswordRepeat())) {
-				userService.saveUser(user);
-				model.addAttribute("message", "Gratulacje ! <br>link do weryfikacji konta został wysłany na podany przez ciebie email.<br> " +
-						"Potwierdź " +
-						"go w ciągu 20 minut aby uaktywnić konto.");
-				return "login/messageRegistration";
-			}
-		}
-		return "login/register";
-	}
-	
-	@GetMapping("/confirm")
-	public String emailConfirmation(@RequestParam String token, Model model){
-		Token verificationToken = tokenService.findByToken(token);
-		if (verificationToken==null){
-		model.addAttribute("message", "Token weryfikacyjny jest błędny.");
-		}else{
-			User user = verificationToken.getUser();
-			if(user.getEnabled()==0){
-				LocalDateTime time = LocalDateTime.now();
-				LocalDateTime expirationTime = verificationToken.getExpireTime();
-				if(expirationTime.isBefore(time)){
-					model.addAttribute("message", "Token weryfikacyjny wygasł.");
-				}else{
-					user.setEnabled(1);
-					userRepository.save(user);
-					model.addAttribute("message", "Weryfikacja zakończona sukcesem.");
-				}
-			}else{
-				model.addAttribute("message", "Twój email został już zweryfikowany.");
-			}
-		}
-		return "login/messageRegistration";
-	}
 	
 	@GetMapping("/profile")
 	public String showProfile (Model model, @AuthenticationPrincipal CurrentUser customUser) {
@@ -93,13 +50,13 @@ public class UserController {
 	}
 	
 	@PostMapping("/profile")
-	public String updateUser (@Valid User user, BindingResult result) {
+	public String updateUser (@Valid User user, BindingResult result, Model model) {
 		
 		if (!result.hasErrors()) {
 			if (user.getPassword().equals(user.getPasswordRepeat())) {
-				userService.saveUser(user);
-				
-				return "redirect:/profile";
+				userService.saveUser(user, true);
+				model.addAttribute("message", "Edycja zakończona sukcesem.");
+				return "login/messageRegistration";
 			}
 		}
 		return "/login/userDataUpdate";
@@ -113,34 +70,85 @@ public class UserController {
 		return "/user/admin";
 	}
 	
-	@GetMapping("/institutions")
-	public String institutionList (Model model, @AuthenticationPrincipal CurrentUser customUser) {
+	@GetMapping("/editCredentials/{id}")
+	public String editCredentials (@PathVariable Long id, Model model) {
 		
-		model.addAttribute("user", customUser.getUser());
-		model.addAttribute("institutions", institutionRepository.findAll());
-		return "/user/institutions";
+		model.addAttribute("user", userRepository.findById(id).get());
+		model.addAttribute("roles", roleRepository.findAll());
+		return "/user/editCredentials";
 	}
+	
+	@PostMapping("/editCredentials")
+	public String saveCredentials (@Valid User user, BindingResult result, Model model) {
+		
+		if (result.hasErrors()) {
+			model.addAttribute("roles", roleRepository.findAll());
+			return "/user/editCredentials";
+		}
+		userRepository.save(user);
+		return "redirect:/admin";
+	}
+	
+	@PostMapping("/changePassword")
+	public String sendLink (@RequestParam String username, Model model) {
+		
+		if (userRepository.findByUsername(username) != null) {
+			
+			try {
+				String token = UUID.randomUUID().toString();
+				tokenService.saveToken(token, userRepository.findByUsername(username));
+				
+				String body = "Aby zmienić hasło na nowe proszę kliknąć w podany link: "+"http"+
+						"://localhost"+
+						":8080/password?token="+token;
+				emailService.sendEmail(username, "Zmiana hasła charityapp2000", body);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			model.addAttribute("message", "Podany adres email nie istnieje w bazie danych.<br>Proszę podać inny adres");
+			return "login/messageRegistration";
+		}
+		model.addAttribute("message", "Link umożliwiający zmianę hasła został wysłany na podany adres email.<br>"+
+				"Link będzie ważny przez 20 minut");
+		return "login/messageRegistration";
+	}
+	
+	@GetMapping("/password")
+	public String passwordForm (@RequestParam String token, Model model) {
 
+		Token verificationToken = tokenService.findByToken(token);
+		if (verificationToken == null) {
+			model.addAttribute("message", "Token weryfikacyjny jest błędny.");
+			return "login/messageRegistration";
+		}
+		else {
+			LocalDateTime time = LocalDateTime.now();
+			LocalDateTime expirationTime = verificationToken.getExpireTime();
+			if (expirationTime.isBefore(time)) {
+				model.addAttribute("message", "Token weryfikacyjny wygasł.");
+				return "login/messageRegistration";
+			}
+			else {
+				model.addAttribute("user", tokenService.findByToken(token).getUser());
+				return "/login/passwordUpdate";
+			}
+		}
+	}
+	
+	@PostMapping("/password")
+	public String passwordReset (@Valid User user, BindingResult result, Model model) {
 
-//
-//	@GetMapping("/changeRole/{id}")  // display user role form
-//	public String roleForm (Model model, @PathVariable long id) {
-//
-//		model.addAttribute("user", id);
-//		model.addAttribute("roles", roleRepository.findAll());
-//		return "/login/roleForm";
-//	}
-//
-//	@PostMapping("/changeRole/{id}")  // update users role
-//	public String updateRole (@PathVariable long id, @RequestParam String role) {
-//
-//		User user = userRepository.findById(id).get();
-//		Set<Role> roles = new HashSet<>();
-//		roles.add(roleRepository.findByName(role));
-//		user.setRoles(roles);
-//		userRepository.save(user);
-//		return "redirect:/user/userList";
-//	}
+		if (result.hasErrors()) {
+			if (user.getPassword().equals(user.getPasswordRepeat())) {
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
+				userRepository.save(user);
+				model.addAttribute("message", "Zmiana hasła zakończona sukcesem.");
+				return "login/messageRegistration";
+			}
+		}
+		return "/login/passwordUpdate";
+	}
 }
-
-

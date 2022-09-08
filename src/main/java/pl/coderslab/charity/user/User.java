@@ -3,6 +3,7 @@ package pl.coderslab.charity.user;
 import lombok.Getter;
 import lombok.Setter;
 import pl.coderslab.charity.role.Role;
+import pl.coderslab.charity.validator.StrongPassword;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -30,8 +31,7 @@ public class User {
 	@Size(min = 2)
 	@NotBlank
 	private String lastName;
-	@Size(min = 3)
-	@NotBlank
+	@StrongPassword
 	private String password;
 	@Transient
 	private String passwordRepeat;

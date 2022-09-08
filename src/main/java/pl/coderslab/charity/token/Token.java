@@ -20,7 +20,7 @@ public class Token {
 	private Long id;
 	private String token;
 	private LocalDateTime expireTime;
-	@OneToOne(cascade = {CascadeType.ALL})
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private User user;
 	
 	

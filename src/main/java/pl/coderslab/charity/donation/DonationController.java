@@ -42,7 +42,7 @@ public class DonationController {
 	public String displayForm (Model model) {
 		
 		model.addAttribute("categories", categoryRepository.findAll());
-		model.addAttribute("institutions", institutionRepository.findAll());
+		model.addAttribute("institutions", institutionRepository.findByActiveTrue());
 		model.addAttribute("donation", new Donation());
 		return "donation/form";
 	}
@@ -82,7 +82,7 @@ public class DonationController {
 	public String updateDonationForm (@PathVariable Long id, Model model) {
 		
 		model.addAttribute("categories", categoryRepository.findAll());
-		model.addAttribute("institutions", institutionRepository.findAll());
+		model.addAttribute("institutions", institutionRepository.findByActiveTrue());
 		model.addAttribute("donation", donationRepository.getById(id));
 		return "donation/updateForm";
 	}
@@ -92,7 +92,7 @@ public class DonationController {
 		
 		if (result.hasErrors()) {
 			model.addAttribute("categories", categoryRepository.findAll());
-			model.addAttribute("institutions", institutionRepository.findAll());
+			model.addAttribute("institutions", institutionRepository.findByActiveTrue());
 			return "donation/updateForm";
 		}
 		donation.setUser(customUser.getUser());

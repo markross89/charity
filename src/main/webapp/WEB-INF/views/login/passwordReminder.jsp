@@ -43,21 +43,18 @@
     </header>
 
     <section class="login-page" >
-      <h2>Zaloguj się</h2>
-      <form method="post">
+      <h1>Podaj adres email. Wyślemy link umożliwiający zmianę hasła</h1>
+      <form method="post" action="/changePassword">
         <div class="form-group" style="margin-left: 180px">
           <input type="email" name="username" placeholder="Email" />
         </div>
-        <div class="form-group" style="margin-left: 180px">
-          <input type="password" name="password" placeholder="Hasło" />
 
-        </div>
 
         <div class="form-group form-group--buttons" style="margin-left: 180px">
-          <input type="submit"  value="Zaloguj się" class="btn">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+          <input type="submit"  value="Wyślij" class="btn">
+
         </div>
-        <a href="<c:url value="/passwordReminder" />"  style="margin-left: 225px" class="btn btn--small btn--without-border reset-password">Zapomniałem hasła</a>
+
       </form>
     </section>
 

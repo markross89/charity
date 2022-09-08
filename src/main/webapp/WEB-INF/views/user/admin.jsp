@@ -77,10 +77,12 @@
                 <td>${u.lastName}</td>
                 <td>${u.username}</td>
                 <td>${u.enabled}</td>
+                <td>
                 <c:forEach items="${u.roles}" var="r">
-                    <td> ${r.name}</td>
+                    ${r.name} &nbsp &nbsp
                 </c:forEach>
-                <td><a href="<c:url value="/editUser" />" style="color: orange; margin-right: 30px; margin-left: 30px">Edytuj</a><a href="<c:url value="/deleteUser" />" style="color: red">Usuń</a></td>
+                </td>
+                <td><a href="<c:url value="/editCredentials/${u.id}" />" style="color: orange">Edytuj</a></td>
 
             </tr>
             </c:forEach>

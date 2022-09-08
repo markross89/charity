@@ -17,6 +17,8 @@ import java.util.List;
 @Controller
 public class HomeController {
 	
+	
+	private final static String MESSAGE_SEND = "Wiadomość została wysłana<br>Dziękujemy.";
 	private final InstitutionRepository institutionRepository;
 	private final DonationRepository donationRepository;
 	private final EmailServiceImpl emailService;
@@ -32,28 +34,18 @@ public class HomeController {
 	@RequestMapping("/")
 	public String homeAction (Model model) {
 		
-		List<List<Institution>> couples = Lists.partition(institutionRepository.findAll(), 2);
 		model.addAttribute("donations", donationRepository.findAll().size());
 		model.addAttribute("quantity", donationRepository.findQuantitySum().orElse(0));
-		model.addAttribute("list", couples);
+		model.addAttribute("list", Lists.partition(institutionRepository.findByActiveTrue(), 2));
 		return "index";
 	}
 	
-	@RequestMapping("/institutions")
-	public String displayInstitutions (Model model) {
-		
-		List<List<Institution>> couples = Lists.partition(institutionRepository.findAll(), 2);
-		model.addAttribute("donations", donationRepository.findAll().size());
-		model.addAttribute("quantity", donationRepository.findQuantitySum().orElse(0));
-		model.addAttribute("list", couples);
-		return "institutions";
-	}
 	
 	@GetMapping("/sendEmail")
 	public String sendEmail (@RequestParam String name, @RequestParam String surname, @RequestParam String message, Model model) {
 		
 		emailService.sendEmail("charityapp2000@gmail.com", name+" "+surname, message);
-		model.addAttribute("message", "Wiadomość została wysłana<br>Dziękujemy");
+		model.addAttribute("message", MESSAGE_SEND);
 		return "login/messageRegistration";
 	}
 	

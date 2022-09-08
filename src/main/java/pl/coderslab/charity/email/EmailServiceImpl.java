@@ -12,12 +12,12 @@ public class EmailServiceImpl implements EmailService {
 	
 	
 	private final JavaMailSender emailSender;
-	private final TokenService tokenService;
 	
-	public EmailServiceImpl (JavaMailSender emailSender, TokenService tokenService) {
+	
+	public EmailServiceImpl (JavaMailSender emailSender) {
 		
 		this.emailSender = emailSender;
-		this.tokenService = tokenService;
+	
 	}
 	
 	@Override

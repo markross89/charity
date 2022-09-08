@@ -5,20 +5,20 @@
 <jsp:include page="../header.jsp"/>
   <body>
     <header style="margin-top: 30px">
-      <nav class="container container--70" >
+      <nav class="container container--70">
         <ul class="nav--actions">
           <sec:authorize access="isAnonymous()">
             <li><a href="<c:url value="/login" />" class="btn btn--small btn--without-border">Zaloguj</a></li>
             <li><a href="<c:url value="/register" />" class="btn btn--small btn--highlighted">Załóż konto</a></li>
           </sec:authorize>
-          <sec:authorize access="hasRole('ADMIN')">
-            <li><a href="<c:url value="/institutions"/>">Fundacje</a></li>
-            <li><a href="<c:url value="/admin"/>">Użytkownicy</a></li>
-          </sec:authorize>
           <sec:authorize access="isAuthenticated()">
             <li class="logged-user" style="margin-top: 6px">
               <sec:authentication property="principal.username"/>
               <ul class="dropdown">
+                <sec:authorize access="hasRole('ADMIN')">
+                  <li><a href="<c:url value="/institutions"/>">Fundacje</a></li>
+                  <li><a href="<c:url value="/admin"/>">Użytkownicy</a></li>
+                </sec:authorize>
                 <li><a href="<c:url value="/profile"/>">Profil</a></li>
                 <li><a href="<c:url value="/userDonations"/>">Moje zbiórki</a></li>
                 <li> <form action="<c:url value="/logout"/>" method="post">
@@ -42,23 +42,23 @@
       </nav>
     </header>
 
-    <section class="login-page" >
-      <h2>Zaloguj się</h2>
-      <form method="post">
-        <div class="form-group" style="margin-left: 180px">
-          <input type="email" name="username" placeholder="Email" />
-        </div>
-        <div class="form-group" style="margin-left: 180px">
-          <input type="password" name="password" placeholder="Hasło" />
+    <section class="login-page">
+      <h2>Dodaj fundacje</h2>
 
-        </div>
+        <form:form   modelAttribute="institution" method="post" action="/">
+        <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
+          <form:input path="name" style="margin-left: 170px" class="form-control form-control-user" placeholder="Nazwa"/>
+        </div> <form:errors path="name" Class="markus-error"  element="div"/>
+        <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
+          <form:textarea path="description" style="margin-left: 65px" class="form-control form-control-user" placeholder="Opis"/>
+        </div><form:errors path="description" Class="markus-error" />
 
-        <div class="form-group form-group--buttons" style="margin-left: 180px">
-          <input type="submit"  value="Zaloguj się" class="btn">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+        <div class="form-group form-group--buttons" style="margin-left: 210px">
+
+          <button class="btn" type="submit">Dodaj</button>
         </div>
-        <a href="<c:url value="/passwordReminder" />"  style="margin-left: 225px" class="btn btn--small btn--without-border reset-password">Zapomniałem hasła</a>
-      </form>
+          </form:form>
     </section>
 
     <jsp:include page="../footer.jsp"/>

@@ -5,11 +5,10 @@ import org.springframework.stereotype.Service;
 import pl.coderslab.charity.user.User;
 
 import javax.transaction.Transactional;
-import java.security.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
+
 
 
 @Service
@@ -39,7 +38,8 @@ public class TokenService {
 	
 	private LocalDateTime calculateExpiryTime (int minutes) {
 		
-		LocalDateTime dateTime = LocalDateTime.now().plus(Duration.of(minutes, ChronoUnit.MINUTES));
-		return dateTime;
+		return LocalDateTime.now().plus(Duration.of(minutes, ChronoUnit.MINUTES));
 	}
+	
+
 }

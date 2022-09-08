@@ -61,6 +61,7 @@
                 <th>Id</th>
                 <th>Nazwa</th>
                 <th>Opis</th>
+                <th>Aktywna</th>
                 <th>Opcje</th>
 
             </tr>
@@ -71,7 +72,8 @@
                 <td>${i.id}</td>
                 <td>${i.name}</td>
                 <td>${i.description}</td>
-                <td><a href="<c:url value="/editInstitution" />" style="color: orange; margin-right: 30px; margin-left: 30px">Edytuj</a><a href="<c:url value="/deleteInstitution" />" style="color: red">Usuń</a></td>
+                <td>${i.active}</td>
+                <td><a href="<c:url value="/editInstitution/${i.id}" />" style="color: orange; margin-right: 30px">Edytuj</a></td>
 
             </tr>
             </c:forEach>
@@ -81,8 +83,9 @@
                 <td style="border-bottom: 0px solid"></td>
                 <td style="border-bottom: 0px solid"></td>
                 <td style="border-bottom: 0px solid"></td>
+                <td style="border-bottom: 0px solid"></td>
                 <td style="border-bottom: 0px solid">
-                    <a href="<c:url value="/addInstitution" />" style="color: green; margin-right: 30px; margin-left: 30px">Dodaj </a>
+                    <a href="<c:url value="/addInstitution" />" style="color: green; margin-right: 30px">Dodaj </a>
                 </td>
 
             </tr>

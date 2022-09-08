@@ -67,7 +67,8 @@
                     </div>
                     <div class="title">"${e.institution.name}"</div>
                     <div class="font-markus">worki: ${e.quantity}</div>
-                    <div class="font-markus"> ${e.pickUpDate} </div>
+                    <div class="font-markus"> Data odbioru: ${e.pickUpDate} </div>
+                    <div class="font-markus"> Adres odbioru:  </div>
                     <div class="font-markus"> ul. ${e.street}</div>
                     <div class="font-markus"> ${e.city}, ${e.postCode}</div>
                     <p>
@@ -80,12 +81,10 @@
                         <c:choose>
                             <c:when test="${todayDate gt newDate}">
                                 <div style="color: green"> Wysłane</div>
-                                <div style="margin-top: 30px"><a href="<c:url value="/deleteDonation/${e.id}" />" style="color: red; font-weight: bold; font-size: small">usuń</a></div>
                             </c:when>
                             <c:otherwise>
                                 <div style="color: orange">  Oczekuje na kuriera</div>
-                                <div style="margin-top: 30px"><a href="<c:url value="/deleteDonation/${e.id}" />" style="color: red; font-weight: bold; font-size: small">usuń</a></div>
-                                <div style="margin-top: 10px"><a href="<c:url value="/updateDonation/${e.id}" />" style="color: orange; font-weight: bold; font-size: small">edytuj</a></div>
+                                <div style="margin-top: 10px"><a href="<c:url value="/updateDonation/${e.id}" />" style="color: red; font-weight: bold; font-size: small">edytuj</a></div>
                             </c:otherwise>
                         </c:choose>
                     </div>
