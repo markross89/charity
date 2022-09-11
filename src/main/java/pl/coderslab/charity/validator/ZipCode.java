@@ -7,9 +7,8 @@ import javax.validation.Payload;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
 import static java.lang.annotation.ElementType.*;
-
-
 
 
 @Target({FIELD})
@@ -17,12 +16,12 @@ import static java.lang.annotation.ElementType.*;
 @Constraint(validatedBy = ZipCodeValidator.class) // #1
 public @interface ZipCode {
 	
-
-	java.lang.String message() default "{javax.validation.constraints.ZipCode.message}";
+	
+	java.lang.String message () default "{javax.validation.constraints.ZipCode.message}";
 	
 	
-	Class<?>[] groups() default {}; // #3
+	Class<?>[] groups () default {}; // #3
 	
-	Class<? extends Payload>[] payload() default {};
-
+	Class<? extends Payload>[] payload () default {};
+	
 }

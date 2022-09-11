@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.coderslab.charity.donation.DonationRepository;
 import pl.coderslab.charity.email.EmailServiceImpl;
-import pl.coderslab.charity.institution.Institution;
 import pl.coderslab.charity.institution.InstitutionRepository;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 
 @Controller
@@ -22,6 +22,7 @@ public class HomeController {
 	private final InstitutionRepository institutionRepository;
 	private final DonationRepository donationRepository;
 	private final EmailServiceImpl emailService;
+
 	
 	public HomeController (InstitutionRepository institutionRepository, DonationRepository donationRepository, EmailServiceImpl emailService) {
 		
@@ -32,11 +33,14 @@ public class HomeController {
 	
 	
 	@RequestMapping("/")
-	public String homeAction (Model model) {
+	public String homeAction (Model model, HttpServletRequest request) {
 		
 		model.addAttribute("donations", donationRepository.findAll().size());
 		model.addAttribute("quantity", donationRepository.findQuantitySum().orElse(0));
 		model.addAttribute("list", Lists.partition(institutionRepository.findByActiveTrue(), 2));
+		Locale l = request.getLocale();
+		System.out.println(l.getLanguage());
+		
 		return "index";
 	}
 	

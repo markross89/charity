@@ -16,15 +16,16 @@ import pl.coderslab.charity.category.CategoryRepository;
 import pl.coderslab.charity.institution.InstitutionRepository;
 import pl.coderslab.charity.user.CurrentUser;
 
-
 import javax.validation.Valid;
 
 import java.util.List;
 
 
+
 @Controller
 public class DonationController {
 	
+	private final static String VERIFICATION_EMAIL_SEND = "Dziękujemy za przesłanie formularza";
 	private final CategoryRepository categoryRepository;
 	private final InstitutionRepository institutionRepository;
 	private final DonationRepository donationRepository;
@@ -55,11 +56,12 @@ public class DonationController {
 			model.addAttribute("institutions", institutionRepository.findAll());
 			return "donation/form";
 		}
-		if (customUser != null) {
+		if (customUser!=null) {
 			donation.setUser(customUser.getUser());
 		}
 		donationRepository.save(donation);
-		return "donation/form-confirmation";
+		model.addAttribute("message", VERIFICATION_EMAIL_SEND);
+		return "login/messageRegistration";
 	}
 	
 	@GetMapping("/userDonations")
@@ -88,7 +90,7 @@ public class DonationController {
 	}
 	
 	@PostMapping("/update")
-	public String updateDonation(@Valid Donation donation, BindingResult result, Model model, @AuthenticationPrincipal CurrentUser customUser) {
+	public String updateDonation (@Valid Donation donation, BindingResult result, Model model, @AuthenticationPrincipal CurrentUser customUser) {
 		
 		if (result.hasErrors()) {
 			model.addAttribute("categories", categoryRepository.findAll());
@@ -97,7 +99,8 @@ public class DonationController {
 		}
 		donation.setUser(customUser.getUser());
 		donationRepository.save(donation);
-		return "donation/form-confirmation";
+		model.addAttribute("message", VERIFICATION_EMAIL_SEND);
+		return "login/messageRegistration";
 	}
 	
 }

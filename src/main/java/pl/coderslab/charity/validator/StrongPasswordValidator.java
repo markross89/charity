@@ -9,12 +9,12 @@ public class StrongPasswordValidator implements ConstraintValidator<StrongPasswo
 	
 	
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context) {
+	public boolean isValid (String value, ConstraintValidatorContext context) {
+		
 		Pattern pattern = Pattern.compile("^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\\W).*$");
-		return 	pattern.matcher(value).matches();
+		return pattern.matcher(value).matches();
 		
 	}
 	
-
-
+	
 }

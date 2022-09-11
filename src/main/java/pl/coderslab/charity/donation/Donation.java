@@ -32,10 +32,10 @@ public class Donation {
 	@NotBlank
 	@ZipCode
 	private String postCode;
-	@Size(min=3)
+	@Size(min = 3)
 	@NotBlank
 	private String street;
-	@Size(min=3)
+	@Size(min = 3)
 	@NotBlank
 	private String city;
 	private String pickUpComment;

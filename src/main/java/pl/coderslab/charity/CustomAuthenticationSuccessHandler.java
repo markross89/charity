@@ -13,19 +13,21 @@ import java.util.Collection;
 
 
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+	
 	SimpleUrlAuthenticationSuccessHandler userSuccessHandler =
 			new SimpleUrlAuthenticationSuccessHandler("/");
 	SimpleUrlAuthenticationSuccessHandler adminSuccessHandler =
 			new SimpleUrlAuthenticationSuccessHandler("/admin");
 	
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-										Authentication authentication) throws IOException, ServletException {
+	public void onAuthenticationSuccess (HttpServletRequest request, HttpServletResponse response,
+										 Authentication authentication) throws IOException, ServletException {
+		
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		for (final GrantedAuthority grantedAuthority : authorities) {
 			String authorityName = grantedAuthority.getAuthority();
 			if (authorityName.equals("ROLE_ADMIN")) {
-			
+				
 				this.adminSuccessHandler.onAuthenticationSuccess(request, response, authentication);
 				return;
 			}

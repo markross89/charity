@@ -2,29 +2,41 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="../header.jsp"/>
   <body>
     <header style="margin-top: 30px">
       <nav class="container container--70" >
+
+        <div class="custom-select">
+          <select id="locales" class="select-box">
+            <option value="" disabled selected hidden><fmt:message key="lang.change"/></option>
+            <option value="en"><fmt:message key="lang.eng"/></option>
+            <option value="pl"><fmt:message key="lang.pl"/></option>
+
+          </select>
+        </div>
         <ul class="nav--actions">
           <sec:authorize access="isAnonymous()">
-            <li><a href="<c:url value="/login" />" class="btn btn--small btn--without-border">Zaloguj</a></li>
-            <li><a href="<c:url value="/register" />" class="btn btn--small btn--highlighted">Załóż konto</a></li>
-          </sec:authorize>
-          <sec:authorize access="hasRole('ADMIN')">
-            <li><a href="<c:url value="/institutions"/>">Fundacje</a></li>
-            <li><a href="<c:url value="/admin"/>">Użytkownicy</a></li>
+            <li><a href="<c:url value="/login" />" class="btn btn--small btn--without-border"><fmt:message key="login.login"/></a></li>
+            <li><a href="<c:url value="/register" />" class="btn btn--small btn--highlighted"><fmt:message key="login.register"/></a></li>
+
           </sec:authorize>
           <sec:authorize access="isAuthenticated()">
             <li class="logged-user" style="margin-top: 6px">
               <sec:authentication property="principal.username"/>
               <ul class="dropdown">
-                <li><a href="<c:url value="/profile"/>">Profil</a></li>
-                <li><a href="<c:url value="/userDonations"/>">Moje zbiórki</a></li>
-                <li> <form action="<c:url value="/logout"/>" method="post">
-                  <input class="logout" type="submit" value="Wyloguj">
-                  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                </form>
+                <sec:authorize access="hasRole('ADMIN')">
+                  <li><a href="<c:url value="/institutions"/>"><fmt:message key="login.menu.institutions"/></a></li>
+                  <li><a href="<c:url value="/admin"/>"><fmt:message key="login.menu.users"/></a></li>
+                </sec:authorize>
+                <li><a href="<c:url value="/profile"/>"><fmt:message key="login.menu.profile"/></a></li>
+                <li><a href="<c:url value="/userDonations"/>"><fmt:message key="login.menu.donations"/></a></li>
+                <li>
+                  <form action="<c:url value="/logout"/>" method="post">
+                    <input class="logout" type="submit" value="<fmt:message key="login.menu.logout"/>">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                  </form>
                 </li>
 
               </ul>
@@ -33,17 +45,17 @@
         </ul>
 
         <ul>
-          <li><a href="<c:url value="/donation" />" class="btn btn--without-border ">Start</a></li>
-          <li><a href="../#description" class="btn btn--without-border">O co chodzi?</a></li>
-          <li><a href="../#about" class="btn btn--without-border">O nas</a></li>
-          <li><a href="../#institutions" class="btn btn--without-border">Fundacje i organizacje</a></li>
-          <li><a href="../#contact" class="btn btn--without-border">Kontakt</a></li>
+          <li><a href="<c:url value="/donation" />" class="btn btn--without-border "><fmt:message key="menu.start"/></a></li>
+          <li><a href="../#description" class="btn btn--without-border"><fmt:message key="menu.checkout"/></a></li>
+          <li><a href="../#about" class="btn btn--without-border"><fmt:message key="menu.about"/></a></li>
+          <li><a href="../#institutions" class="btn btn--without-border"><fmt:message key="menu.institutions"/></a></li>
+          <li><a href="../#contact" class="btn btn--without-border"><fmt:message key="menu.contact"/></a></li>
         </ul>
       </nav>
     </header>
 
     <section class="login-page" >
-      <h1>Podaj adres email. Wyślemy link umożliwiający zmianę hasła</h1>
+      <h1><fmt:message key="users.password.link.message"/></h1>
       <form method="post" action="/changePassword">
         <div class="form-group" style="margin-left: 180px">
           <input type="email" name="username" placeholder="Email" />
@@ -51,7 +63,7 @@
 
 
         <div class="form-group form-group--buttons" style="margin-left: 180px">
-          <input type="submit"  value="Wyślij" class="btn">
+          <input type="submit"  value="<fmt:message key="contact.send"/>" class="btn">
 
         </div>
 

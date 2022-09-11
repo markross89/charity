@@ -19,13 +19,12 @@ public class Institution {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank
-	@Size(min=3)
+	@Size(min = 3)
 	private String name;
 	@NotBlank
-	@Size(min=6)
+	@Size(min = 6)
 	private String description;
 	private boolean active;
 	
 	
-
 }

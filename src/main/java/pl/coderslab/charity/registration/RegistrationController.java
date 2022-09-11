@@ -6,33 +6,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import pl.coderslab.charity.token.Token;
-import pl.coderslab.charity.token.TokenService;
 import pl.coderslab.charity.user.User;
-import pl.coderslab.charity.user.UserRepository;
-import pl.coderslab.charity.user.UserService;
+
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 
 @Controller
 public class RegistrationController {
 	
-	private final UserRepository userRepository;
-	private final UserService userService;
-	private final TokenService tokenService;
 	private final RegistrationService registrationService;
 	
-	public RegistrationController (UserRepository userRepository, UserService userService, TokenService tokenService,
-								   RegistrationService registrationService) {
+	public RegistrationController (RegistrationService registrationService) {
 		
-		this.userRepository = userRepository;
-		this.userService = userService;
-		this.tokenService = tokenService;
 		this.registrationService = registrationService;
 	}
-	
 	
 	@GetMapping("/register")
 	public String showRegistrationForm (Model model) {
@@ -44,13 +32,17 @@ public class RegistrationController {
 	@PostMapping("/register")
 	public String processRegistrationForm (@Valid User user, BindingResult result, Model model) {
 		
-		return	registrationService.registerUser(user, model, result);
+		if (!result.hasErrors()) {
+			model.addAttribute("message", registrationService.registerUser(user));
+			return "login/messageRegistration";
+		}
+		return "login/register";
 	}
 	
 	@GetMapping("/confirm")
 	public String emailConfirmation (@RequestParam String token, Model model) {
 		
-		registrationService.emailConfirmation(token, model);
+		model.addAttribute("message", registrationService.emailConfirmation(token));
 		return "login/messageRegistration";
 	}
 	

@@ -7,7 +7,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import pl.coderslab.charity.donation.Donation;
 import pl.coderslab.charity.user.CurrentUser;
 
 import javax.validation.Valid;
@@ -23,7 +22,6 @@ public class InstitutionController {
 		
 		this.institutionRepository = institutionRepository;
 	}
-	
 	
 	@GetMapping("/addInstitution")
 	public String displayForm (Model model) {

@@ -13,5 +13,5 @@ public interface InstitutionRepository extends JpaRepository<Institution, Long> 
 	
 	List<Institution> findByActiveTrue ();
 	
-	List<Institution> findAllByOrderByActiveDesc();
+	List<Institution> findAllByOrderByActiveDesc ();
 }
