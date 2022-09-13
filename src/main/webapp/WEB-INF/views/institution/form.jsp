@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="../header.jsp"/>
   <body>
     <header style="margin-top: 30px">
@@ -59,10 +60,12 @@
 
         <form:form   modelAttribute="institution" method="post" >
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:input path="name" style="margin-left: 170px" class="form-control form-control-user" placeholder="Nazwa"/>
+          <spring:message code="placeholder.title" var="titlePlaceholder"/>
+          <form:input path="name" style="margin-left: 170px" class="form-control form-control-user" placeholder="${titlePlaceholder}"/>
         </div> <form:errors path="name" Class="markus-error"  element="div"/>
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:textarea path="description" style="margin-left: 65px" class="form-control form-control-user" placeholder="Opis"/>
+          <spring:message code="placeholder.description" var="descriptionPlaceholder"/>
+          <form:textarea path="description" style="margin-left: 65px" class="form-control form-control-user" placeholder="${descriptionPlaceholder}"/>
         </div><form:errors path="description" Class="markus-error" />
 
 

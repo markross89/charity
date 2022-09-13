@@ -101,7 +101,7 @@
       <div class="form--steps-container">
         <div class="form--steps-counter"> <fmt:message key="donation.step"/><span>1</span>/4</div>
 
-        <form:form  modelAttribute="donation" class="form" method="post" action="/update">
+        <form:form  modelAttribute="donation" class="form" method="post" >
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3> <fmt:message key="donation.pick.category"/>:</h3>
@@ -137,8 +137,8 @@
             </div>
 
             <div class="form-group form-group--buttons">
-              <button type="button" class="btn prev-step"><fmt:message key="donation.button.next"/></button>
-              <button type="button" class="btn next-step"><fmt:message key="donation.button.back"/></button>
+              <button type="button" class="btn prev-step"><fmt:message key="donation.button.back"/></button>
+              <button type="button" class="btn next-step"><fmt:message key="donation.button.next"/></button>
             </div>
           </div>
 
@@ -166,8 +166,8 @@
             <form:errors path="institution" element="div" class="error" style="margin-left: 75px"/>
 
             <div class="form-group form-group--buttons">
-              <button type="button" class="btn prev-step"><fmt:message key="donation.button.next"/></button>
-              <button type="button" class="btn next-step"><fmt:message key="donation.button.back"/></button>
+              <button type="button" class="btn prev-step"><fmt:message key="donation.button.back"/></button>
+              <button type="button" class="btn next-step"><fmt:message key="donation.button.next"/></button>
             </div>
           </div>
 

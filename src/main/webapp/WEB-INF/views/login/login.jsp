@@ -58,10 +58,10 @@
       <h2><fmt:message key="login.login"/></h2>
       <form method="post">
         <div class="form-group" style="margin-left: 180px">
-          <input type="email" name="username" placeholder="Email" />
+          <input type="email" name="username" placeholder="<fmt:message key="placeholder.email"/>" />
         </div>
         <div class="form-group" style="margin-left: 180px">
-          <input type="password" name="password" placeholder="Hasło" />
+          <input type="password" name="password" placeholder="<fmt:message key="placeholder.password"/>" />
 
         </div>
 

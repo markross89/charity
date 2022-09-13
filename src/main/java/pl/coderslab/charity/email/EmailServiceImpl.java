@@ -9,14 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailServiceImpl implements EmailService {
 	
-	
 	private final JavaMailSender emailSender;
-	
 	
 	public EmailServiceImpl (JavaMailSender emailSender) {
 		
 		this.emailSender = emailSender;
-		
 	}
 	
 	@Override
@@ -28,6 +25,5 @@ public class EmailServiceImpl implements EmailService {
 		message.setSubject(subject);
 		message.setText(text);
 		emailSender.send(message);
-		
 	}
 }

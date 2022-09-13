@@ -15,12 +15,10 @@ import javax.validation.Valid;
 
 public class UserController {
 	
-	
 	private final UserService userService;
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
 	private final RoleRepository roleRepository;
-	
 	
 	public UserController (UserService userService, UserRepository userRepository,
 						   TokenService tokenService, RoleRepository roleRepository) {
@@ -29,9 +27,7 @@ public class UserController {
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
 		this.roleRepository = roleRepository;
-		
 	}
-	
 	
 	@GetMapping("/profile")
 	public String showProfile (Model model, @AuthenticationPrincipal CurrentUser customUser) {
@@ -73,8 +69,7 @@ public class UserController {
 			model.addAttribute("roles", roleRepository.findAll());
 			return "/user/editCredentials";
 		}
-		userRepository.save(user);
-		return "redirect:/admin";
+		return userService.updateUserCredentials(user);
 	}
 	
 	@PostMapping("/changePassword")
@@ -87,12 +82,11 @@ public class UserController {
 	@GetMapping("/password")
 	public String passwordForm (@RequestParam String token, Model model) {
 		
-		String result = userService.passwordChangeConfirmation(token);
-		if (result.equals(token)) {
+		if (userService.passwordChangeConfirmation(token).equals(token)) {
 			model.addAttribute("user", tokenService.findByToken(token).getUser());
 			return "/login/passwordUpdate";
 		}
-		model.addAttribute("message", result);
+		model.addAttribute("message", userService.passwordChangeConfirmation(token));
 		return "login/messageRegistration";
 	}
 	

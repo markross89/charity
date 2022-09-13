@@ -3,6 +3,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="../header.jsp"/>
   <body>
     <header>
@@ -61,20 +62,27 @@
 
         <form:form  class="user" modelAttribute="user" method="post" >
           <form:hidden path="id" value="${user.id}" />
+
+          <form:hidden path="enabled" value="${user.enabled}" />
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:input path="firstName" style="margin-left: 170px" class="form-control form-control-user" placeholder="Imię"/>
+          <spring:message code="placeholder.name" var="namePlaceholder"/>
+          <form:input path="firstName" style="margin-left: 170px" class="form-control form-control-user" placeholder="${namePlaceholder}"/>
         </div> <form:errors path="firstName" Class="markus-error"  element="div"/>
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:input path="lastName" style="margin-left: 170px" class="form-control form-control-user" placeholder="Nazwisko"/>
+          <spring:message code="placeholder.surname" var="lastNamePlaceholder"/>
+          <form:input path="lastName" style="margin-left: 170px" class="form-control form-control-user" placeholder="${lastNamePlaceholder}"/>
         </div><form:errors path="lastName" Class="markus-error" />
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:input path="username" style="margin-left: 170px" class="form-control form-control-user" placeholder="Email"/>
+          <spring:message code="placeholder.email" var="emailPlaceholder"/>
+          <form:input path="username" style="margin-left: 170px" class="form-control form-control-user" placeholder="${emailPlaceholder}"/>
         </div> <form:errors path="username" Class="markus-error" />
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:password path="password" style="margin-left: 170px" class="form-control form-control-user" placeholder="Hasło"/>
+          <spring:message code="placeholder.password" var="passwordPlaceholder" />
+          <form:password path="password" style="margin-left: 170px" class="form-control form-control-user" placeholder="${passwordPlaceholder}"/>
         </div> <form:errors path="password" Class="markus-error" />
         <div class="form-group" style="margin-bottom: 10px; margin-top: 20px">
-          <form:password path="passwordRepeat" style="margin-left: 170px" class="form-control form-control-user" placeholder="Powtórz hasło"/>
+          <spring:message code="placeholder.password.repeat" var="passwordRepeatPlaceholder"/>
+          <form:password path="passwordRepeat" style="margin-left: 170px" class="form-control form-control-user" placeholder="${passwordRepeatPlaceholder}"/>
         </div><form:errors path="passwordRepeat" Class="markus-error" />
 
         <div class="form-group form-group--buttons" style="margin-left: 230px">

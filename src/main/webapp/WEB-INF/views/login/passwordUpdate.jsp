@@ -5,7 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:include page="../header.jsp"/>
   <body>
-    <header>
+    <header style="margin-top: 30px">
       <nav class="container container--70">
 
         <div class="custom-select">

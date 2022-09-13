@@ -62,7 +62,7 @@
 
     <!-- SLIDE 1 -->
     <div class="help--slides active" data-id="1">
-        <p>Przekazane dary</p>
+        <p><fmt:message key="donations.title"/></p>
 
         <ul class="help--slides-items">
             <c:forEach items="${donations}" var="d">
@@ -74,13 +74,13 @@
                     <div class="font-markus">
                         <c:forEach items="${e.category}" var="u">
                             ${u.name}
-                        </c:forEach> przekazane dla Fundacji
+                        </c:forEach> <fmt:message key="donations.for"/>
                     </div>
                     <div class="title">"${e.institution.name}"</div>
-                    <div class="font-markus">worki: ${e.quantity}</div>
-                    <div class="font-markus"> Data odbioru: ${e.pickUpDate} </div>
-                    <div class="font-markus"> Adres odbioru:  </div>
-                    <div class="font-markus"> ul. ${e.street}</div>
+                    <div class="font-markus"><fmt:message key="donations.bags"/>: ${e.quantity}</div>
+                    <div class="font-markus"> <fmt:message key="donations.pickup.date"/>: ${e.pickUpDate} </div>
+                    <div class="font-markus"> <fmt:message key="donations.pickup.address"/>:  </div>
+                    <div class="font-markus"> <fmt:message key="donations.street.name"/> ${e.street}</div>
                     <div class="font-markus"> ${e.city}, ${e.postCode}</div>
                     <p>
                         <jsp:useBean id="today" class="java.util.Date" />
@@ -88,14 +88,14 @@
                         <fmt:formatDate value="${parsedDate}" var="newDate"  pattern="dd-MM-yyyy" />
                         <fmt:formatDate value="${today}" var="todayDate" pattern="dd-MM-yyyy " />
                     </p>
-                    <div class="font-markus" style="display: inline">Status:
+                    <div class="font-markus" style="display: inline"><fmt:message key="donations.status"/>:
                         <c:choose>
                             <c:when test="${todayDate gt newDate}">
-                                <div style="color: green"> Wysłane</div>
+                                <div style="color: green"> <fmt:message key="donations.send"/></div>
                             </c:when>
                             <c:otherwise>
-                                <div style="color: orange">  Oczekuje na kuriera</div>
-                                <div style="margin-top: 10px"><a href="<c:url value="/updateDonation/${e.id}" />" style="color: red; font-weight: bold; font-size: small">edytuj</a></div>
+                                <div style="color: orange">  <fmt:message key="donations.waiting"/></div>
+                                <div style="margin-top: 10px"><a href="<c:url value="/updateDonation/${e.id}" />" style="color: red; font-weight: bold; font-size: small"><fmt:message key="donations.button.edit"/></a></div>
                             </c:otherwise>
                         </c:choose>
                     </div>

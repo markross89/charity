@@ -15,12 +15,13 @@ import javax.validation.Valid;
 @Controller
 public class InstitutionController {
 	
-	
 	private final InstitutionRepository institutionRepository;
+	private final InstitutionService institutionService;
 	
-	public InstitutionController (InstitutionRepository institutionRepository) {
+	public InstitutionController (InstitutionRepository institutionRepository, InstitutionService institutionService) {
 		
 		this.institutionRepository = institutionRepository;
+		this.institutionService = institutionService;
 	}
 	
 	@GetMapping("/addInstitution")
@@ -36,9 +37,7 @@ public class InstitutionController {
 		if (result.hasErrors()) {
 			return "institution/form";
 		}
-		institution.setActive(true);
-		institutionRepository.save(institution);
-		model.addAttribute("message", "Gratulacje! <br> Dodanie fundacji zakończone sukcesem");
+		model.addAttribute("message", institutionService.addInstitution(institution));
 		return "login/messageRegistration";
 	}
 	
@@ -55,8 +54,7 @@ public class InstitutionController {
 		if (result.hasErrors()) {
 			return "institution/editForm";
 		}
-		institutionRepository.save(institution);
-		model.addAttribute("message", "Gratulacje! <br> Zmiany zostały wprowadzone poprawnie.");
+		model.addAttribute("message", institutionService.updateInstitution(institution));
 		return "redirect:/institutions";
 	}
 	
@@ -67,5 +65,4 @@ public class InstitutionController {
 		model.addAttribute("institutions", institutionRepository.findAllByOrderByActiveDesc());
 		return "/user/institutions";
 	}
-	
 }

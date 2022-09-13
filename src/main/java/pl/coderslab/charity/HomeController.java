@@ -11,26 +11,24 @@ import pl.coderslab.charity.email.EmailServiceImpl;
 import pl.coderslab.charity.institution.InstitutionRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Locale;
 
 
 @Controller
 public class HomeController {
 	
-	
-	private final static String MESSAGE_SEND = "Wiadomość została wysłana<br>Dziękujemy.";
 	private final InstitutionRepository institutionRepository;
 	private final DonationRepository donationRepository;
 	private final EmailServiceImpl emailService;
-
+	private final MessageService messageService;
 	
-	public HomeController (InstitutionRepository institutionRepository, DonationRepository donationRepository, EmailServiceImpl emailService) {
+	public HomeController (InstitutionRepository institutionRepository, DonationRepository donationRepository, EmailServiceImpl emailService,
+						   MessageService messageService) {
 		
 		this.institutionRepository = institutionRepository;
 		this.donationRepository = donationRepository;
 		this.emailService = emailService;
+		this.messageService = messageService;
 	}
-	
 	
 	@RequestMapping("/")
 	public String homeAction (Model model, HttpServletRequest request) {
@@ -38,18 +36,14 @@ public class HomeController {
 		model.addAttribute("donations", donationRepository.findAll().size());
 		model.addAttribute("quantity", donationRepository.findQuantitySum().orElse(0));
 		model.addAttribute("list", Lists.partition(institutionRepository.findByActiveTrue(), 2));
-		Locale l = request.getLocale();
-		System.out.println(l.getLanguage());
-		
 		return "index";
 	}
-	
 	
 	@GetMapping("/sendEmail")
 	public String sendEmail (@RequestParam String name, @RequestParam String surname, @RequestParam String message, Model model) {
 		
 		emailService.sendEmail("charityapp2000@gmail.com", name+" "+surname, message);
-		model.addAttribute("message", MESSAGE_SEND);
+		model.addAttribute("message", messageService.getMessage("message.send"));
 		return "login/messageRegistration";
 	}
 	

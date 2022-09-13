@@ -19,25 +19,26 @@ import pl.coderslab.charity.user.CurrentUser;
 import javax.validation.Valid;
 
 import java.util.List;
-
+import java.util.Optional;
 
 
 @Controller
 public class DonationController {
 	
-	private final static String VERIFICATION_EMAIL_SEND = "Dziękujemy za przesłanie formularza";
+
 	private final CategoryRepository categoryRepository;
 	private final InstitutionRepository institutionRepository;
 	private final DonationRepository donationRepository;
+	private final DonationService donationService;
 	
 	public DonationController (CategoryRepository categoryRepository, InstitutionRepository institutionRepository,
-							   DonationRepository donationRepository) {
+							   DonationRepository donationRepository, DonationService donationService) {
 		
 		this.categoryRepository = categoryRepository;
 		this.institutionRepository = institutionRepository;
 		this.donationRepository = donationRepository;
+		this.donationService = donationService;
 	}
-	
 	
 	@GetMapping("/donation")
 	public String displayForm (Model model) {
@@ -56,11 +57,7 @@ public class DonationController {
 			model.addAttribute("institutions", institutionRepository.findAll());
 			return "donation/form";
 		}
-		if (customUser!=null) {
-			donation.setUser(customUser.getUser());
-		}
-		donationRepository.save(donation);
-		model.addAttribute("message", VERIFICATION_EMAIL_SEND);
+		model.addAttribute("message", donationService.addDonation(donation, customUser));
 		return "login/messageRegistration";
 	}
 	
@@ -71,13 +68,6 @@ public class DonationController {
 		model.addAttribute("user", customUser.getUser());
 		model.addAttribute("donations", donations);
 		return "donation/donations";
-	}
-	
-	@GetMapping("/deleteDonation/{id}")
-	public String deleteDonation (@PathVariable Long id) {
-		
-		donationRepository.delete(donationRepository.getById(id));
-		return "redirect:/userDonations";
 	}
 	
 	@GetMapping("/updateDonation/{id}")
@@ -97,9 +87,7 @@ public class DonationController {
 			model.addAttribute("institutions", institutionRepository.findByActiveTrue());
 			return "donation/updateForm";
 		}
-		donation.setUser(customUser.getUser());
-		donationRepository.save(donation);
-		model.addAttribute("message", VERIFICATION_EMAIL_SEND);
+		model.addAttribute("message", donationService.addDonation(donation, customUser));
 		return "login/messageRegistration";
 	}
 	
