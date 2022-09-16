@@ -14,7 +14,3 @@ JSTL, i18n, Spring Email)
 Projekt realizowany podczas kursu JAVA Developer w Coderslab.
 
 ---
-
-## Licence & copyrights
-
-© Marek Roszak
